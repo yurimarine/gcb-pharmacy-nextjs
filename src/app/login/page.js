@@ -1,31 +1,45 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { loginThunk, clearError } from "../store/authSlice";
 import { useRouter } from "next/navigation";
-import { loginUser } from "./actions";
+import { useEffect, useState } from "react";
 
 export default function LoginPage() {
-  const [message, setMessage] = useState("");
+  const dispatch = useDispatch();
   const router = useRouter();
+  const { token, loading, error } = useSelector((s) => s.auth);
+  const [message, setMessage] = useState("");
+
   useEffect(() => {
-    const token = localStorage.getItem("token");
     if (token) {
-      router.replace("admin/dashboard");
+      router.replace("/admin/dashboard");
     }
-  }, [router]);
+  }, [token, router]);
+
+  useEffect(() => {
+    if (error)
+      setMessage(typeof error === "string" ? error : JSON.stringify(error));
+  }, [error]);
+
+  function onInput() {
+    if (message) {
+      setMessage("");
+      dispatch(clearError());
+    }
+  }
 
   async function handleSubmit(e) {
     e.preventDefault();
+    const email = e.target.email.value;
+    const password = e.target.password.value;
 
-    const formData = new FormData(e.target);
-    const result = await loginUser(formData);
-
-    if (result.success) {
+    const res = await dispatch(loginThunk({ email, password }));
+    if (res.meta.requestStatus === "fulfilled") {
       setMessage("Login successful!");
-      if (result.token) localStorage.setItem("token", result.token);
-      router.replace("admin/dashboard");
+      // redirect handled by token effect
     } else {
-      setMessage(result.message);
+      // message set by error effect
     }
   }
 
@@ -34,32 +48,33 @@ export default function LoginPage() {
       <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
         <h1 className="text-2xl font-semibold mb-6 text-center">Login</h1>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4" onInput={onInput}>
           <div>
             <label className="block text-sm mb-1">Email</label>
             <input
-              type="email"
               name="email"
+              type="email"
               required
-              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+              className="w-full px-3 py-2 border rounded-md focus:outline-none"
             />
           </div>
 
           <div>
             <label className="block text-sm mb-1">Password</label>
             <input
-              type="password"
               name="password"
+              type="password"
               required
-              className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+              className="w-full px-3 py-2 border rounded-md focus:outline-none"
             />
           </div>
 
           <button
             type="submit"
-            className="w-full py-2 bg-black text-white rounded-md hover:bg-gray-800"
+            disabled={loading}
+            className="w-full py-2 bg-black text-white rounded-md"
           >
-            Login
+            {loading ? "Loading..." : "Login"}
           </button>
         </form>
 

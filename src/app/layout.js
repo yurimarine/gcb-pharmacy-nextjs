@@ -1,13 +1,17 @@
 import "./globals.css";
-
-export const metadata = {
-  title: "Login",
-};
+import Providers from "./providers";
+import GlobalSpinner from "./components/GlobalSpinner";
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <Providers>
+          <GlobalSpinner />
+          {children}
+        </Providers>
+      </body>
     </html>
   );
 }
+

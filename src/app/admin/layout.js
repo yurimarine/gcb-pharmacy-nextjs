@@ -1,17 +1,19 @@
 "use client";
 
-import useAuth from "../hooks/useAuth";
+import Protected from "../utils/Protected";
 import Sidebar from "../components/Sidebar";
+import Navbar from "../components/Navbar";
 
 export default function AdminLayout({ children }) {
-  const loading = useAuth();
-
-  if (loading) return <p>Checking authentication...</p>;
-
   return (
-    <div className="flex min-h-screen">
-      <Sidebar />
-      <main className="flex-1 bg-gray-100 p-6">{children}</main>
-    </div>
+    <Protected>
+      <div className="flex min-h-screen">
+        <Sidebar />
+        <div className="flex-1 flex flex-col">
+          <Navbar />
+          <main className="flex-1 bg-gray-100 p-6">{children}</main>
+        </div>
+      </div>
+    </Protected>
   );
 }

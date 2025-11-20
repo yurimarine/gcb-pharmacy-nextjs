@@ -1,17 +1,32 @@
 "use client";
 
 import Link from "next/link";
+import { useDispatch } from "react-redux";
+import { logout } from "../store/authSlice";
 import { useRouter, usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
+import {
+  HomeIcon,
+  CubeIcon,
+  ClipboardDocumentListIcon,
+  PlusCircleIcon,
+  ListBulletIcon,
+  PencilSquareIcon,
+  ArchiveBoxIcon,
+  ChevronLeftIcon,
+  ArrowLeftStartOnRectangleIcon,
+} from "@heroicons/react/24/outline";
+
 export default function Sidebar() {
   const router = useRouter();
   const pathname = usePathname();
+  const dispatch = useDispatch();
 
   function handleLogout() {
-    localStorage.removeItem("token");
-    router.replace("/login");
+    dispatch(logout()); 
+    router.replace("/login"); 
   }
 
   function toggleMenu(name) {
@@ -19,22 +34,46 @@ export default function Sidebar() {
   }
 
   const menuItems = [
-    { name: "Dashboard", path: "/admin/dashboard" },
+    {
+      name: "Dashboard",
+      path: "/admin/dashboard",
+      icon: <HomeIcon className="w-5 h-5" />,
+    },
 
     {
       name: "Product",
       path: "/admin/product",
+      icon: <CubeIcon className="w-5 h-5" />,
       children: [
-        { name: "Add Product", path: "/admin/product/add" },
-        { name: "Product List", path: "/admin/product/list" },
-        { name: "Update Product", path: "/admin/product/update" },
+        {
+          name: "Product List",
+          path: "/admin/product/list",
+          icon: <ListBulletIcon className="w-4 h-4" />,
+        },
+        {
+          name: "Add Product",
+          path: "/admin/product/add",
+          icon: <PlusCircleIcon className="w-4 h-4" />,
+        },
+        {
+          name: "Update Product",
+          path: "/admin/product/update",
+          icon: <PencilSquareIcon className="w-4 h-4" />,
+        },
       ],
     },
 
     {
       name: "Inventory",
       path: "/admin/inventory",
-      children: [{ name: "Update Inventory", path: "/admin/inventory/update" }],
+      icon: <ClipboardDocumentListIcon className="w-5 h-5" />,
+      children: [
+        {
+          name: "Update Inventory",
+          path: "/admin/inventory/update",
+          icon: <ArchiveBoxIcon className="w-4 h-4" />,
+        },
+      ],
     },
   ];
 
@@ -63,13 +102,28 @@ export default function Sidebar() {
               onClick={() =>
                 item.children ? toggleMenu(item.name) : router.push(item.path)
               }
-              className={`w-full text-left p-3 rounded transition
+              className={`w-full flex items-center justify-between p-3 rounded transition
                 hover:bg-gray-200
                 ${pathname === item.path ? "bg-gray-200 font-semibold" : ""}
               `}
             >
-              {item.name}
+              <div className="flex items-center gap-3">
+                {item.icon}
+                {item.name}
+              </div>
+
+              {/* Chevron for dropdown items */}
+              {item.children && (
+                <motion.div
+                  animate={{ rotate: openMenu === item.name ? -90 : 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <ChevronLeftIcon className="w-5 h-5" />
+                </motion.div>
+              )}
             </button>
+
+            {/* Children dropdown */}
             {item.children && (
               <AnimatePresence>
                 {openMenu === item.name && (
@@ -78,13 +132,13 @@ export default function Sidebar() {
                     animate={{ height: "auto", opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
                     transition={{ duration: 0.3 }}
-                    className="ml-4 mt-1 flex flex-col space-y-1 overflow-hidden"
+                    className="ml-7 mt-1  flex flex-col space-y-1 overflow-hidden"
                   >
                     {item.children.map((child) => (
                       <Link
                         key={child.path}
                         href={child.path}
-                        className={`p-2 rounded transition text-sm
+                        className={`flex items-center  gap-2 p-2 rounded transition text-sm
                           hover:bg-gray-200
                           ${
                             pathname === child.path
@@ -93,6 +147,7 @@ export default function Sidebar() {
                           }
                         `}
                       >
+                        {child.icon}
                         {child.name}
                       </Link>
                     ))}
@@ -106,8 +161,9 @@ export default function Sidebar() {
 
       <button
         onClick={handleLogout}
-        className="mt-auto bg-amber-50 text-black py-2 px-4 rounded hover:bg-amber-600 transition duration-300"
+        className="mt-auto flex items-center gap-2 py-2 px-4 rounded hover:bg-gray-300 transition"
       >
+        <ArrowLeftStartOnRectangleIcon className="w-5 h-5" />
         Logout
       </button>
     </aside>
