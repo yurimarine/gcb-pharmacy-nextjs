@@ -17,6 +17,20 @@ export const fetchGenerics = createAsyncThunk(
   }
 );
 
+export const addGeneric = createAsyncThunk(
+  "generic/addGeneric",
+  async (genericData, { rejectWithValue }) => {
+    try {
+      const response = await api.post("admin/generic/add", genericData);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to add generic"
+      );
+    }
+  }
+);
+
 const genericSlice = createSlice({
   name: "generic",
   initialState: {
@@ -38,6 +52,20 @@ const genericSlice = createSlice({
       .addCase(fetchGenerics.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Something went wrong";
+      });
+
+    builder
+      .addCase(addGeneric.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(addGeneric.fulfilled, (state, action) => {
+        state.loading = false;
+        state.generics.push(action.payload.data ?? action.payload);
+      })
+      .addCase(addGeneric.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to add generic";
       });
   },
 });

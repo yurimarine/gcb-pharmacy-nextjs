@@ -17,6 +17,20 @@ export const fetchSuppliers = createAsyncThunk(
   }
 );
 
+export const addSupplier = createAsyncThunk(
+  "supplier/addSupplier",
+  async (supplierData, { rejectWithValue }) => {
+    try {
+      const response = await api.post("admin/supplier/add", supplierData);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to add supplier"
+      );
+    }
+  }
+);
+
 const supplierSlice = createSlice({
   name: "supplier",
   initialState: {
@@ -38,6 +52,20 @@ const supplierSlice = createSlice({
       .addCase(fetchSuppliers.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Something went wrong";
+      });
+
+    builder
+      .addCase(addSupplier.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(addSupplier.fulfilled, (state, action) => {
+        state.loading = false;
+        state.suppliers.push(action.payload.data ?? action.payload);
+      })
+      .addCase(addSupplier.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to add supplier";
       });
   },
 });

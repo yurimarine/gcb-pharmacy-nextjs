@@ -17,6 +17,22 @@ export const fetchCategories = createAsyncThunk(
   }
 );
 
+export const addCategory = createAsyncThunk(
+  "category/addCategory",
+  async (categoryData, { rejectWithValue }) => {
+    try {
+      const response = await api.post("admin/category/add", categoryData);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to add category"
+      );
+    }
+  }
+);
+
+
+
 const categorySlice = createSlice({
   name: "category",
   initialState: {
@@ -39,6 +55,20 @@ const categorySlice = createSlice({
         state.loading = false;
         state.error = action.payload || "Something went wrong";
       });
+
+      builder
+            .addCase(addCategory.pending, (state) => {
+              state.loading = true;
+              state.error = null;
+            })
+            .addCase(addCategory.fulfilled, (state, action) => {
+              state.loading = false;
+              state.categories.push(action.payload.data ?? action.payload);
+            })
+            .addCase(addCategory.rejected, (state, action) => {
+              state.loading = false;
+              state.error = action.payload || "Failed to add category";
+            });
   },
 });
 

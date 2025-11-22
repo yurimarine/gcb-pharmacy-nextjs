@@ -17,6 +17,23 @@ export const fetchManufacturers = createAsyncThunk(
   }
 );
 
+export const addManufacturer = createAsyncThunk(
+  "manufacturer/addManufacturer",
+  async (manufacturerData, { rejectWithValue }) => {
+    try {
+      const response = await api.post(
+        "admin/manufacturer/add",
+        manufacturerData
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to add manufacturer"
+      );
+    }
+  }
+);
+
 const manufacturerSlice = createSlice({
   name: "manufacturer",
   initialState: {
@@ -38,6 +55,20 @@ const manufacturerSlice = createSlice({
       .addCase(fetchManufacturers.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Something went wrong";
+      });
+
+    builder
+      .addCase(addManufacturer.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(addManufacturer.fulfilled, (state, action) => {
+        state.loading = false;
+        state.manufacturers.push(action.payload.data ?? action.payload);
+      })
+      .addCase(addManufacturer.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to add manufacturer";
       });
   },
 });
