@@ -8,7 +8,7 @@ import {
   ArrowDownIcon,
 } from "@heroicons/react/24/outline";
 
-export default function Table({ columns, data, onEdit, onDelete }) {
+export default function Table({ columns, data, onUpdate, onDelete }) {
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
 
   const sortedData = useMemo(() => {
@@ -52,15 +52,18 @@ export default function Table({ columns, data, onEdit, onDelete }) {
             {columns.map((col) => (
               <th
                 key={col.key}
-                className="px-4 py-2 text-left text-sm font-semibold text-gray-700 cursor-pointer select-none"
+                className="px-4 py-3 text-left text-sm font-semibold text-gray-700 cursor-pointer select-none"
                 onClick={() => handleSort(col.key)}
               >
-                {col.label}
-                {renderSortIcon(col.key)}
+                <div className="flex items-center">
+                  {col.label}
+                  {renderSortIcon(col.key)}
+                </div>
               </th>
             ))}
-            {(onEdit || onDelete) && (
-              <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">
+
+            {(onUpdate || onDelete) && (
+              <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">
                 Actions
               </th>
             )}
@@ -71,7 +74,7 @@ export default function Table({ columns, data, onEdit, onDelete }) {
           {sortedData.length === 0 && (
             <tr>
               <td
-                colSpan={columns.length + (onEdit || onDelete ? 1 : 0)}
+                colSpan={columns.length + (onUpdate || onDelete ? 1 : 0)}
                 className="px-4 py-6 text-center text-gray-400"
               >
                 No data available
@@ -80,31 +83,40 @@ export default function Table({ columns, data, onEdit, onDelete }) {
           )}
 
           {sortedData.map((row, idx) => (
-            <tr key={idx} className="hover:bg-gray-50">
+            <tr key={idx} className="hover:bg-gray-50 transition">
               {columns.map((col) => (
                 <td key={col.key} className="px-4 py-2 text-sm text-gray-700">
                   {row[col.key]}
                 </td>
               ))}
 
-              {(onEdit || onDelete) && (
-                <td className="px-4 py-2 flex space-x-2">
-                  {onEdit && (
-                    <button
-                      onClick={() => onEdit(row)}
-                      className="p-1 rounded hover:bg-gray-100"
-                    >
-                      <PencilIcon className="w-5 h-5 text-blue-500" />
-                    </button>
-                  )}
-                  {onDelete && (
-                    <button
-                      onClick={() => onDelete(row)}
-                      className="p-1 rounded hover:bg-gray-100"
-                    >
-                      <TrashIcon className="w-5 h-5 text-red-500" />
-                    </button>
-                  )}
+              {(onUpdate || onDelete) && (
+                <td className="px-4 py-2">
+                  <div className="flex items-center space-x-2">
+
+                    {/* Edit Button */}
+                    {onUpdate && (
+                      <button
+                        onClick={() => onUpdate(row)}
+                        className="p-1.5 rounded border border-orange-500 bg-orange-100 hover:bg-orange-300 transition"
+                        title="Edit"
+                      >
+                        <PencilIcon className="w-5 h-5 text-orange-500" />
+                      </button>
+                    )}
+
+                    {/* Delete Button */}
+                    {onDelete && (
+                      <button
+                        onClick={() => onDelete(row)}
+                        className="p-1.5 border border-red-600  bg-red-100 rounded hover:bg-red-200 transition"
+                        title="Delete"
+                      >
+                        <TrashIcon className="w-5 h-5 text-red-600" />
+                      </button>
+                    )}
+
+                  </div>
                 </td>
               )}
             </tr>

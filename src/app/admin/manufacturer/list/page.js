@@ -2,11 +2,14 @@
 
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchManufacturers } from "../../../store/manufacturerSlice";
+import {
+  deleteManufacturer,
+  fetchManufacturers,
+} from "../../../store/manufacturerSlice";
+import { FaPlus } from "react-icons/fa";
 import Table from "../../../components/Table";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
 import Link from "next/link";
-import { FaPlus } from "react-icons/fa";
 
 export default function ManufacturerList() {
   const dispatch = useDispatch();
@@ -27,6 +30,12 @@ export default function ManufacturerList() {
     name: m.name,
     description: m.description,
   }));
+
+  const handleDelete = (row) => {
+    if (!confirm(`Are you sure you want to delete ${row.name}?`)) return;
+
+    dispatch(deleteManufacturer(row.id));
+  };
 
   useEffect(() => {
     dispatch(fetchManufacturers());
@@ -54,7 +63,7 @@ export default function ManufacturerList() {
         </Link>
       </div>
 
-      <Table columns={columns} data={tableData} />
+      <Table columns={columns} data={tableData} onDelete={handleDelete} />
     </div>
   );
 }

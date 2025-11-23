@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchGenerics } from "../../../store/genericSlice";
+import { deleteGeneric, fetchGenerics } from "../../../store/genericSlice";
 import Table from "../../../components/Table";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
 import Link from "next/link";
@@ -34,8 +34,17 @@ export default function GenericList() {
         <LoadingSpinner />
       </div>
     );
-  if (error) return <p className="text-red-600">{error}</p>;
 
+  if (error) return <p className="text-red-600">{error}</p>;
+  const handleEdit = (row) => {
+    console.log("Edit clicked:", row);
+  };
+
+  const handleDelete = (row) => {
+      if (!confirm(`Are you sure you want to delete ${row.name}?`)) return;
+  
+      dispatch(deleteGeneric(row.id));
+    };
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
@@ -50,7 +59,13 @@ export default function GenericList() {
         </Link>
       </div>
 
-      <Table columns={columns} data={tableData} />
+      {/* Enable Actions */}
+      <Table
+        columns={columns}
+        data={tableData}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+      />
     </div>
   );
 }

@@ -3,11 +3,13 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addManufacturer } from "@/app/store/manufacturerSlice";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ListBulletIcon } from "@heroicons/react/24/outline";
 
 export default function AddManufacturerPage() {
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const [form, setForm] = useState({
     name: "",
@@ -25,7 +27,10 @@ export default function AddManufacturerPage() {
     e.preventDefault();
     dispatch(addManufacturer(form))
       .unwrap()
-      .then((res) => console.log("Manufacturer added:", res))
+      .then((res) => {
+        console.log("Manufacturer added:", res);
+        router.push("/admin/manufacturer/list");
+      })
       .catch((err) => console.error(err));
     setForm({
       name: "",

@@ -2,8 +2,9 @@
 
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProducts } from "../../../store/productSlice";
-import Table from "../../../components/Table"; 
+import { fetchProducts, deleteProduct } from "../../../store/productSlice";
+
+import Table from "../../../components/Table";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
 import Link from "next/link";
 import { FaPlus } from "react-icons/fa";
@@ -27,6 +28,16 @@ export default function ProductList() {
     category_name: p.category?.name || "-",
     unit_cost: p.unit_cost,
   }));
+
+  const handleUpdate = (row) => {
+    console.log("Edit clicked:", row);
+  };
+
+  const handleDelete = (row) => {
+    if (!confirm(`Are you sure you want to delete ${row.brand_name}?`)) return;
+
+    dispatch(deleteProduct(row.id));
+  };
 
   useEffect(() => {
     dispatch(fetchProducts());
@@ -54,7 +65,12 @@ export default function ProductList() {
         </Link>
       </div>
 
-      <Table columns={columns} data={tableData} />
+      <Table
+        columns={columns}
+        data={tableData}
+        onUpdate={handleUpdate}
+        onDelete={handleDelete}
+      />
     </div>
   );
 }

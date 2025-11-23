@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCategories } from "../../../store/categorySlice";
+import { deleteCategory, fetchCategories } from "../../../store/categorySlice";
 import Table from "../../../components/Table";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
 import Link from "next/link";
@@ -15,8 +15,7 @@ export default function CategoryList() {
   const columns = [
     { key: "id", label: "ID" },
     { key: "name", label: "Category Name" },
-        { key: "description", label: "Description" },
-
+    { key: "description", label: "Description" },
   ];
 
   const tableData = categories.map((c) => ({
@@ -24,6 +23,12 @@ export default function CategoryList() {
     name: c.name,
     description: c.description,
   }));
+
+  const handleDelete = (row) => {
+    if (!confirm(`Are you sure you want to delete ${row.name}?`)) return;
+
+    dispatch(deleteCategory(row.id));
+  };
 
   useEffect(() => {
     dispatch(fetchCategories());
@@ -51,7 +56,7 @@ export default function CategoryList() {
         </Link>
       </div>
 
-      <Table columns={columns} data={tableData} />
+      <Table columns={columns} data={tableData} onDelete={handleDelete} />
     </div>
   );
 }

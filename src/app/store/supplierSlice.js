@@ -31,6 +31,20 @@ export const addSupplier = createAsyncThunk(
   }
 );
 
+export const deleteSupplier = createAsyncThunk(
+  "supplier/deleteSupplier",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await api.delete(`/admin/supplier/delete/${id}`);
+      return id;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || error.message || "Something went wrong"
+      );
+    }
+  }
+);
+
 const supplierSlice = createSlice({
   name: "supplier",
   initialState: {
@@ -66,6 +80,18 @@ const supplierSlice = createSlice({
       .addCase(addSupplier.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Failed to add supplier";
+      });
+    builder
+      .addCase(deleteSupplier.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(deleteSupplier.fulfilled, (state, action) => {
+        state.loading = false;
+        state.suppliers = state.suppliers.filter((p) => p.id !== action.payload);
+      })
+      .addCase(deleteSupplier.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });

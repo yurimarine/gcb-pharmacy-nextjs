@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchSuppliers } from "../../../store/supplierSlice";
+import { deleteSupplier, fetchSuppliers } from "../../../store/supplierSlice";
 import Table from "../../../components/Table";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
 import Link from "next/link";
@@ -32,6 +32,12 @@ export default function SupplierList() {
     address: s.address,
   }));
 
+  const handleDelete = (row) => {
+    if (!confirm(`Are you sure you want to delete ${row.name}?`)) return;
+
+    dispatch(deleteSupplier(row.id));
+  };
+
   useEffect(() => {
     dispatch(fetchSuppliers());
   }, [dispatch]);
@@ -58,7 +64,7 @@ export default function SupplierList() {
         </Link>
       </div>
 
-      <Table columns={columns} data={tableData} />
+      <Table columns={columns} data={tableData} onDelete={handleDelete} />
     </div>
   );
 }

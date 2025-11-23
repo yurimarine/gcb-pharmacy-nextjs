@@ -7,22 +7,25 @@ import { fetchCategories } from "@/app/store/categorySlice";
 import { fetchGenerics } from "@/app/store/genericSlice";
 import { fetchSuppliers } from "@/app/store/supplierSlice";
 import { addProduct } from "@/app/store/productSlice";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ListBulletIcon } from "@heroicons/react/24/outline";
+import Link from "next/link";
+import LoadingSpinner from "@/app/components/LoadingSpinner";
 
 export default function AddProductPage() {
   const dispatch = useDispatch();
+  const router = useRouter();
 
-  const { manufacturers, loading: loadingManufacturers } = useSelector(
+  const { manufacturers, loading: loadingManufacturers, error: errorManufacturers } = useSelector(
     (state) => state.manufacturer
   );
-  const { categories, loading: loadingCategories } = useSelector(
+  const { categories, loading: loadingCategories, error: errorCategories } = useSelector(
     (state) => state.category
   );
-  const { generics, loading: loadingGenerics } = useSelector(
+  const { generics, loading: loadingGenerics, error: errorGenerics } = useSelector(
     (state) => state.generic
   );
-  const { suppliers, loading: loadingSuppliers } = useSelector(
+  const { suppliers, loading: loadingSuppliers, error: errorSuppliers } = useSelector(
     (state) => state.supplier
   );
 
@@ -52,7 +55,10 @@ export default function AddProductPage() {
     e.preventDefault();
     dispatch(addProduct(form))
       .unwrap()
-      .then((res) => console.log("Product added:", res))
+      .then((res) => {
+        console.log("Product added:", res);
+        router.push("/admin/product/list"); 
+      })
       .catch((err) => console.error(err));
     setForm({
       generic_id: "",
@@ -76,6 +82,15 @@ export default function AddProductPage() {
     dispatch(fetchGenerics());
     dispatch(fetchSuppliers());
   }, [dispatch]);
+
+  if (loadingManufacturers || loadingCategories || loadingGenerics || loadingSuppliers)
+      return (
+        <div className="relative min-h-screen w-full">
+          <LoadingSpinner />
+        </div>
+      );
+    if (errorManufacturers || errorCategories || errorGenerics || errorSuppliers)
+      return <p className="text-red-600">{errorManufacturers || errorCategories || errorGenerics || errorSuppliers}</p>;
 
   return (
     <div className="w-full text-gray-700 ">

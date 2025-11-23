@@ -3,11 +3,13 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addSupplier } from "@/app/store/supplierSlice";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ListBulletIcon } from "@heroicons/react/24/outline";
+import Link from "next/link";
 
 export default function AddSupplierPage() {
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const [form, setForm] = useState({
     name: "",
@@ -28,7 +30,10 @@ export default function AddSupplierPage() {
     e.preventDefault();
     dispatch(addSupplier(form))
       .unwrap()
-      .then((res) => console.log("Supplier added:", res))
+      .then((res) => {
+        console.log("Supplier added:", res);
+        router.push("/admin/supplier/list");
+      })
       .catch((err) => console.error(err));
     setForm({
       name: "",

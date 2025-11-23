@@ -31,6 +31,20 @@ export const addGeneric = createAsyncThunk(
   }
 );
 
+export const deleteGeneric = createAsyncThunk(
+  "generic/deleteGeneric",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await api.delete(`/admin/generic/delete/${id}`);
+      return id;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || error.message || "Something went wrong"
+      );
+    }
+  }
+);
+
 const genericSlice = createSlice({
   name: "generic",
   initialState: {
@@ -66,6 +80,20 @@ const genericSlice = createSlice({
       .addCase(addGeneric.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Failed to add generic";
+      });
+    builder
+      .addCase(deleteGeneric.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(deleteGeneric.fulfilled, (state, action) => {
+        state.loading = false;
+        state.generics = state.generics.filter(
+          (p) => p.id !== action.payload
+        );
+      })
+      .addCase(deleteGeneric.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });
