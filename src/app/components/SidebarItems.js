@@ -108,9 +108,9 @@ export const SidebarItems = [
     icon: <ClipboardDocumentListIcon className="w-5 h-5" />,
     children: [
       {
-        name: "Update Inventory",
-        path: "/admin/inventory/update",
-        icon: <ArchiveBoxIcon className="w-4 h-4" />,
+        name: "List",
+        path: "/admin/inventory/list",
+        icon: <ListBulletIcon className="w-4 h-4" />,
       },
     ],
   },

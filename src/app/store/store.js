@@ -7,6 +7,9 @@ import pharmacyReducer from "./pharmacySlice";
 import manufacturerReducer from "./manufacturerSlice";
 import categoryReducer from "./categorySlice";
 import genericReducer from "./genericSlice";
+import inventoryReducer from "./inventorySlice";
+
+
 
 export const store = configureStore({
   reducer: {
@@ -18,5 +21,6 @@ export const store = configureStore({
     manufacturer: manufacturerReducer,
     category: categoryReducer,
     generic: genericReducer,
+    inventory: inventoryReducer,
   },
 });
