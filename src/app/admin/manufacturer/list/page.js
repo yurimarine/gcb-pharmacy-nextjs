@@ -7,17 +7,17 @@ import {
   fetchManufacturers,
 } from "../../../store/manufacturerSlice";
 import { FaPlus } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 import Table from "../../../components/Table";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
 import Link from "next/link";
 
 export default function ManufacturerList() {
   const dispatch = useDispatch();
+  const router = useRouter();
   const { manufacturers, loading, error } = useSelector(
     (state) => state.manufacturer
   );
-
-  console.log(manufacturers);
 
   const columns = [
     { key: "id", label: "ID" },
@@ -30,6 +30,10 @@ export default function ManufacturerList() {
     name: m.name,
     description: m.description,
   }));
+
+  const handleUpdate = (row) => {
+    router.push(`/admin/manufacturer/update/${row.id}`);
+  };
 
   const handleDelete = (row) => {
     if (!confirm(`Are you sure you want to delete ${row.name}?`)) return;
@@ -63,7 +67,12 @@ export default function ManufacturerList() {
         </Link>
       </div>
 
-      <Table columns={columns} data={tableData} onDelete={handleDelete} />
+      <Table
+        columns={columns}
+        data={tableData}
+        onUpdate={handleUpdate}
+        onDelete={handleDelete}
+      />
     </div>
   );
 }

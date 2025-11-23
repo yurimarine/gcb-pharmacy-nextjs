@@ -45,6 +45,37 @@ export const deleteGeneric = createAsyncThunk(
   }
 );
 
+export const updateGeneric = createAsyncThunk(
+  "generic/updateGeneric",
+  async (genericData, { rejectWithValue }) => {
+    try {
+      const response = await api.put(
+        `admin/generic/update/${genericData.id}`,
+        genericData
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to update generic"
+      );
+    }
+  }
+);
+
+export const fetchGenericById = createAsyncThunk(
+  "generic/fetchGenericById",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await api.get(`/admin/generic/${id}`);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to fetch generic"
+      );
+    }
+  }
+);
+
 const genericSlice = createSlice({
   name: "generic",
   initialState: {
@@ -87,11 +118,39 @@ const genericSlice = createSlice({
       })
       .addCase(deleteGeneric.fulfilled, (state, action) => {
         state.loading = false;
-        state.generics = state.generics.filter(
-          (p) => p.id !== action.payload
-        );
+        state.generics = state.generics.filter((p) => p.id !== action.payload);
       })
       .addCase(deleteGeneric.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
+    builder
+      .addCase(updateGeneric.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateGeneric.fulfilled, (state, action) => {
+        state.loading = false;
+        const updatedGeneric = action.payload.data ?? action.payload;
+        const index = state.generics.findIndex(
+          (p) => p.id === updatedGeneric.id
+        );
+        if (index !== -1) state.generics[index] = updatedGeneric;
+      })
+      .addCase(updateGeneric.rejected, (state, action ) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
+    builder
+      .addCase(fetchGenericById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchGenericById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.generic = action.payload.data ?? action.payload;
+      })
+      .addCase(fetchGenericById.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

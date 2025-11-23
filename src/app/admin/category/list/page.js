@@ -3,13 +3,16 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteCategory, fetchCategories } from "../../../store/categorySlice";
+import { useRouter } from "next/navigation";
+import { FaPlus } from "react-icons/fa";
 import Table from "../../../components/Table";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
 import Link from "next/link";
-import { FaPlus } from "react-icons/fa";
 
 export default function CategoryList() {
   const dispatch = useDispatch();
+  const router = useRouter();
+
   const { categories, loading, error } = useSelector((state) => state.category);
 
   const columns = [
@@ -23,6 +26,10 @@ export default function CategoryList() {
     name: c.name,
     description: c.description,
   }));
+
+  const handleUpdate = (row) => {
+    router.push(`/admin/category/update/${row.id}`);
+  };
 
   const handleDelete = (row) => {
     if (!confirm(`Are you sure you want to delete ${row.name}?`)) return;
@@ -56,7 +63,7 @@ export default function CategoryList() {
         </Link>
       </div>
 
-      <Table columns={columns} data={tableData} onDelete={handleDelete} />
+      <Table columns={columns} data={tableData} onUpdate={handleUpdate} onDelete={handleDelete} />
     </div>
   );
 }

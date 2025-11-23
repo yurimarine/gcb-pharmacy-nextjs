@@ -3,13 +3,15 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteSupplier, fetchSuppliers } from "../../../store/supplierSlice";
+import { useRouter } from "next/navigation";
+import { FaPlus } from "react-icons/fa";
 import Table from "../../../components/Table";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
 import Link from "next/link";
-import { FaPlus } from "react-icons/fa";
 
 export default function SupplierList() {
   const dispatch = useDispatch();
+  const router = useRouter();
   const { suppliers, loading, error } = useSelector((state) => state.supplier);
 
   console.log(suppliers);
@@ -31,6 +33,10 @@ export default function SupplierList() {
     phone: s.phone,
     address: s.address,
   }));
+
+  const handleUpdate = (row) => {
+    router.push(`/admin/supplier/update/${row.id}`);
+  };
 
   const handleDelete = (row) => {
     if (!confirm(`Are you sure you want to delete ${row.name}?`)) return;
@@ -64,7 +70,12 @@ export default function SupplierList() {
         </Link>
       </div>
 
-      <Table columns={columns} data={tableData} onDelete={handleDelete} />
+      <Table
+        columns={columns}
+        data={tableData}
+        onUpdate={handleUpdate}
+        onDelete={handleDelete}
+      />
     </div>
   );
 }
