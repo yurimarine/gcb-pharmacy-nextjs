@@ -2,45 +2,30 @@
 
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProducts, deleteProduct } from "../../../store/productSlice";
-
+import { deleteGeneric, fetchGenerics } from "../../../store/genericSlice";
 import Table from "../../../components/Table";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
 import Link from "next/link";
 import { FaPlus } from "react-icons/fa";
 
-export default function ProductList() {
+export default function GenericList() {
   const dispatch = useDispatch();
-  const { products, loading, error } = useSelector((state) => state.product);
+  const { generics, loading, error } = useSelector((state) => state.generic);
 
   const columns = [
     { key: "id", label: "ID" },
-    { key: "brand_name", label: "Brand Name" },
-    { key: "generic_name", label: "Generic" },
-    { key: "category_name", label: "Category" },
-    { key: "unit_cost", label: "Unit Cost" },
+    { key: "name", label: "Generic Name" },
+    { key: "description", label: "Description" },
   ];
 
-  const tableData = products.map((p) => ({
-    id: p.id,
-    brand_name: p.brand_name,
-    generic_name: p.generic?.name || "-",
-    category_name: p.category?.name || "-",
-    unit_cost: p.unit_cost,
+  const tableData = generics.map((g) => ({
+    id: g.id,
+    name: g.name,
+    description: g.description,
   }));
 
-  const handleUpdate = (row) => {
-    console.log("Edit clicked:", row);
-  };
-
-  const handleDelete = (row) => {
-    if (!confirm(`Are you sure you want to delete ${row.brand_name}?`)) return;
-
-    dispatch(deleteProduct(row.id));
-  };
-
   useEffect(() => {
-    dispatch(fetchProducts());
+    dispatch(fetchGenerics());
   }, [dispatch]);
 
   if (loading)
@@ -49,26 +34,36 @@ export default function ProductList() {
         <LoadingSpinner />
       </div>
     );
-  if (error) return <p className="text-red-600">{error}</p>;
 
+  if (error) return <p className="text-red-600">{error}</p>;
+  const handleEdit = (row) => {
+    console.log("Edit clicked:", row);
+  };
+
+  const handleDelete = (row) => {
+      if (!confirm(`Are you sure you want to delete ${row.name}?`)) return;
+  
+      dispatch(deleteGeneric(row.id));
+    };
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
-        <h1 className="text-xl font-bold">Products</h1>
+        <h1 className="text-xl font-bold">Generics</h1>
 
         <Link
-          href="/admin/product/add"
+          href="/admin/generic/add"
           className="bg-green-500 shadow-md font-semibold text-white px-4 py-2 rounded flex items-center gap-2 hover:bg-green-600 transition"
         >
           <FaPlus className="text-white w-4 h-4" />
-          <span>Add Product</span>
+          <span>Add Generic</span>
         </Link>
       </div>
 
+      {/* Enable Actions */}
       <Table
         columns={columns}
         data={tableData}
-        onUpdate={handleUpdate}
+        onEdit={handleEdit}
         onDelete={handleDelete}
       />
     </div>
