@@ -27,7 +27,13 @@ export default function ProductList() {
     brand_name: p.brand_name,
     generic_name: p.generic?.name || "-",
     category_name: p.category?.name || "-",
-    unit_cost: p.unit_cost,
+    unit_cost:
+      p.unit_cost != null
+        ? `₱ ${Number(p.unit_cost).toLocaleString(undefined, {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}`
+        : "-",
   }));
 
   const handleUpdate = (row) => {

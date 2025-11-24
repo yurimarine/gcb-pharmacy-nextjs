@@ -26,6 +26,15 @@ export default function GenericList() {
     description: g.description,
   }));
 
+  const handleUpdate = (row) => {
+    router.push(`/admin/generic/update/${row.id}`);
+  };
+
+  const handleDelete = (row) => {
+    if (!confirm(`Are you sure you want to delete ${row.name}?`)) return;
+    dispatch(deleteGeneric(row.id));
+  };
+
   useEffect(() => {
     dispatch(fetchGenerics());
   }, [dispatch]);
@@ -38,15 +47,6 @@ export default function GenericList() {
     );
   if (error) return <p className="text-red-600">{error}</p>;
 
-  const handleUpdate = (row) => {
-    router.push(`/admin/generic/update/${row.id}`);
-  };
-
-  const handleDelete = (row) => {
-    if (!confirm(`Are you sure you want to delete ${row.name}?`)) return;
-
-    dispatch(deleteGeneric(row.id));
-  };
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
