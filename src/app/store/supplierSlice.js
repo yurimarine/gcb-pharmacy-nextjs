@@ -45,6 +45,37 @@ export const deleteSupplier = createAsyncThunk(
   }
 );
 
+export const updateSupplier = createAsyncThunk(
+  "supplier/updateSupplier",
+  async (supplierData, { rejectWithValue }) => {
+    try {
+      const response = await api.put(
+        `admin/supplier/update/${supplierData.id}`,
+        supplierData
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to update Supplier"
+      );
+    }
+  }
+);
+
+export const fetchSupplierById = createAsyncThunk(
+  "supplier/fetchSupplierById",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await api.get(`/admin/supplier/${id}`);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to fetch Supplier"
+      );
+    }
+  }
+);
+
 const supplierSlice = createSlice({
   name: "supplier",
   initialState: {
@@ -87,9 +118,41 @@ const supplierSlice = createSlice({
       })
       .addCase(deleteSupplier.fulfilled, (state, action) => {
         state.loading = false;
-        state.suppliers = state.suppliers.filter((p) => p.id !== action.payload);
+        state.suppliers = state.suppliers.filter(
+          (p) => p.id !== action.payload
+        );
       })
       .addCase(deleteSupplier.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
+    builder
+      .addCase(updateSupplier.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateSupplier.fulfilled, (state, action) => {
+        state.loading = false;
+        const updatedSupplier = action.payload.data ?? action.payload;
+        const index = state.suppliers.findIndex(
+          (p) => p.id === updatedSupplier.id
+        );
+        if (index !== -1) state.suppliers[index] = updatedSupplier;
+      })
+      .addCase(updateSupplier.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
+    builder
+      .addCase(fetchSupplierById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchSupplierById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.supplier = action.payload.data ?? action.payload;
+      })
+      .addCase(fetchSupplierById.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

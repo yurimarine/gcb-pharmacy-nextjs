@@ -48,6 +48,37 @@ export const deleteManufacturer = createAsyncThunk(
   }
 );
 
+export const updateManufacturer = createAsyncThunk(
+  "manufacturer/updateManufacturer",
+  async (manufacturerData, { rejectWithValue }) => {
+    try {
+      const response = await api.put(
+        `admin/manufacturer/update/${manufacturerData.id}`,
+        manufacturerData
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to update Manufacturer"
+      );
+    }
+  }
+);
+
+export const fetchManufacturerById = createAsyncThunk(
+  "manufacturer/fetchManufacturerById",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await api.get(`/admin/manufacturer/${id}`);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to fetch Manufacturer"
+      );
+    }
+  }
+);
+
 const manufacturerSlice = createSlice({
   name: "manufacturer",
   initialState: {
@@ -91,9 +122,41 @@ const manufacturerSlice = createSlice({
       })
       .addCase(deleteManufacturer.fulfilled, (state, action) => {
         state.loading = false;
-        state.manufacturers = state.manufacturers.filter((p) => p.id !== action.payload);
+        state.manufacturers = state.manufacturers.filter(
+          (p) => p.id !== action.payload
+        );
       })
       .addCase(deleteManufacturer.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
+    builder
+      .addCase(updateManufacturer.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateManufacturer.fulfilled, (state, action) => {
+        state.loading = false;
+        const updatedManufacturer = action.payload.data ?? action.payload;
+        const index = state.manufacturers.findIndex(
+          (p) => p.id === updatedManufacturer.id
+        );
+        if (index !== -1) state.manufacturers[index] = updatedManufacturer;
+      })
+      .addCase(updateManufacturer.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
+    builder
+      .addCase(fetchManufacturerById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchManufacturerById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.manufacturer = action.payload.data ?? action.payload;
+      })
+      .addCase(fetchManufacturerById.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

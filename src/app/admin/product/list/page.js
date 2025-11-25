@@ -3,14 +3,15 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts, deleteProduct } from "../../../store/productSlice";
-
+import { FaPlus } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 import Table from "../../../components/Table";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
 import Link from "next/link";
-import { FaPlus } from "react-icons/fa";
 
 export default function ProductList() {
   const dispatch = useDispatch();
+  const router = useRouter();
   const { products, loading, error } = useSelector((state) => state.product);
 
   const columns = [
@@ -26,11 +27,17 @@ export default function ProductList() {
     brand_name: p.brand_name,
     generic_name: p.generic?.name || "-",
     category_name: p.category?.name || "-",
-    unit_cost: p.unit_cost,
+    unit_cost:
+      p.unit_cost != null
+        ? `₱ ${Number(p.unit_cost).toLocaleString(undefined, {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}`
+        : "-",
   }));
 
   const handleUpdate = (row) => {
-    console.log("Edit clicked:", row);
+    router.push(`/admin/product/update/${row.id}`);
   };
 
   const handleDelete = (row) => {

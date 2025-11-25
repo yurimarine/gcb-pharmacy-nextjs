@@ -3,13 +3,15 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteGeneric, fetchGenerics } from "../../../store/genericSlice";
+import { useRouter } from "next/navigation";
+import { FaPlus } from "react-icons/fa";
 import Table from "../../../components/Table";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
 import Link from "next/link";
-import { FaPlus } from "react-icons/fa";
 
 export default function GenericList() {
   const dispatch = useDispatch();
+  const router = useRouter();
   const { generics, loading, error } = useSelector((state) => state.generic);
 
   const columns = [
@@ -24,6 +26,15 @@ export default function GenericList() {
     description: g.description,
   }));
 
+  const handleUpdate = (row) => {
+    router.push(`/admin/generic/update/${row.id}`);
+  };
+
+  const handleDelete = (row) => {
+    if (!confirm(`Are you sure you want to delete ${row.name}?`)) return;
+    dispatch(deleteGeneric(row.id));
+  };
+
   useEffect(() => {
     dispatch(fetchGenerics());
   }, [dispatch]);
@@ -34,17 +45,8 @@ export default function GenericList() {
         <LoadingSpinner />
       </div>
     );
-
   if (error) return <p className="text-red-600">{error}</p>;
-  const handleEdit = (row) => {
-    console.log("Edit clicked:", row);
-  };
 
-  const handleDelete = (row) => {
-      if (!confirm(`Are you sure you want to delete ${row.name}?`)) return;
-  
-      dispatch(deleteGeneric(row.id));
-    };
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
@@ -63,7 +65,7 @@ export default function GenericList() {
       <Table
         columns={columns}
         data={tableData}
-        onEdit={handleEdit}
+        onUpdate={handleUpdate}
         onDelete={handleDelete}
       />
     </div>
