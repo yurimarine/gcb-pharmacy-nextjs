@@ -13,7 +13,6 @@ export default function UpdateGenericPage() {
   const router = useRouter();
   const { id } = useParams();
   const { generic, loading, error } = useSelector((state) => state.generic);
-
   const [form, setForm] = useState({
     name: "",
     description: "",
@@ -48,8 +47,8 @@ export default function UpdateGenericPage() {
   useEffect(() => {
     if (generic) {
       setForm({
-        name: generic.name,
-        description: generic.description,
+        name: generic.name || "",
+        description: generic.description || "",
       });
     }
   }, [generic]);

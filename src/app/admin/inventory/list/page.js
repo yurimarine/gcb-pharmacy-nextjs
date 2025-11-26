@@ -25,6 +25,7 @@ export default function InventoryList() {
   const [selectedPharmacy, setSelectedPharmacy] = useState("");
   const columns = [
     { key: "product_id", label: "ID" },
+    { key: "generic_name", label: "Generic Name" },
     { key: "product_name", label: "Product" },
     { key: "stock_quantity", label: "Stock Quantity" },
     { key: "markup_percentage", label: "Markup %" },
@@ -32,11 +33,13 @@ export default function InventoryList() {
     { key: "reorder_quantity", label: "Reorder Level" },
     { key: "expiry_date", label: "Expiry Date" },
   ];
-  
+
   const tableData = inventory.map((item) => ({
     id: item.id,
+    status: item.status,
     pharmacy_id: item.pharmacy_id,
     product_id: item.product_id,
+    generic_name: item.product?.generic?.name ?? "-",
     product_name: item.product?.brand_name ?? "-",
     stock_quantity: item.stock_quantity ?? "-",
     markup_percentage:
@@ -54,7 +57,6 @@ export default function InventoryList() {
 
   const handleUpdate = (row) => {
     router.push(`/admin/inventory/update/${row.pharmacy_id}/${row.product_id}`);
-    console.log(row);
   };
 
   useEffect(() => {
@@ -67,6 +69,12 @@ export default function InventoryList() {
     }
   }, [dispatch, selectedPharmacy]);
 
+  useEffect(() => {
+    if (pharmacies?.length > 0 && !selectedPharmacy) {
+      setSelectedPharmacy(pharmacies[0].id); 
+    }
+  }, [pharmacies, selectedPharmacy]);
+
   if (loadingPharmacies)
     return (
       <div className="relative min-h-screen w-full">
@@ -76,24 +84,41 @@ export default function InventoryList() {
   if (errorPharmacies) return <p className="text-red-600">{errorPharmacies}</p>;
 
   return (
-    <div>
-      <h1 className="text-xl font-bold mb-4">Inventory </h1>
+    <div className="text-gray-900">
+      <h1 className="text-xl font-bold mb-4 ">Inventory </h1>
 
       {/* Pharmacy dropdown selector */}
-      <div className="mb-4">
-        <label className="font-semibold mr-3">Select Pharmacy:</label>
+      <div className="mb-4 flex items-center gap-6">
+        {/* SELECT DROPDOWN */}
         <select
-          className="border px-3 py-2 rounded"
+          className="border border-gray-300 bg-gray-200 focus:border-green-600 focus:ring-0 outline-none px-3 py-2 rounded"
           value={selectedPharmacy}
           onChange={(e) => setSelectedPharmacy(e.target.value)}
         >
-          <option value="">-- Choose Pharmacy --</option>
           {pharmacies?.map((p) => (
             <option key={p.id} value={p.id}>
               {p.name}
             </option>
           ))}
         </select>
+
+        {/* LEGEND */}
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 rounded bg-yellow-100 border border-yellow-500"></div>
+            <span className="text-sm text-gray-700">Low Stock</span>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 rounded bg-gray-300 border border-gray-500"></div>
+            <span className="text-sm text-gray-700">Expired</span>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 rounded bg-red-300 border border-red-500"></div>
+            <span className="text-sm text-gray-700">Critical</span>
+          </div>
+        </div>
       </div>
 
       {loading && (

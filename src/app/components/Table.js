@@ -43,11 +43,25 @@ export default function Table({ columns, data, onUpdate, onDelete }) {
       <ArrowDownIcon className="w-4 h-4 inline ml-1 text-gray-500" />
     );
   };
+  
+  const getRowClass = (row) => {
+    if (!row.status) return "hover:bg-gray-50 transition";
+    switch (row.status) {
+      case "low_stock":
+        return "bg-yellow-100 hover:bg-yellow-200 transition";
+      case "critical":
+        return "bg-red-100 hover:bg-red-200 transition";
+      case "expired":
+        return "bg-gray-300 hover:bg-gray-400 transition";
+      default:
+        return "bg-white hover:bg-green-300 transition";
+    }
+  };
 
   return (
     <div className="overflow-x-auto bg-white shadow rounded-lg">
       <table className="min-w-full divide-y divide-gray-200">
-        <thead className="bg-gray-50">
+        <thead className="bg-gray-300">
           <tr>
             {columns.map((col) => (
               <th
@@ -83,18 +97,16 @@ export default function Table({ columns, data, onUpdate, onDelete }) {
           )}
 
           {sortedData.map((row, idx) => (
-            <tr key={idx} className="hover:bg-gray-50 transition">
+            <tr key={idx} className={getRowClass(row)}>
               {columns.map((col) => (
                 <td key={col.key} className="px-4 py-2 text-sm text-gray-700">
-                  {row[col.key]}
+                  {col.render ? col.render(row[col.key], row) : row[col.key]}
                 </td>
               ))}
 
               {(onUpdate || onDelete) && (
                 <td className="px-4 py-2">
                   <div className="flex items-center space-x-2">
-
-                    {/* Edit Button */}
                     {onUpdate && (
                       <button
                         onClick={() => onUpdate(row)}
@@ -104,18 +116,15 @@ export default function Table({ columns, data, onUpdate, onDelete }) {
                         <PencilIcon className="w-5 h-5 text-orange-500" />
                       </button>
                     )}
-
-                    {/* Delete Button */}
                     {onDelete && (
                       <button
                         onClick={() => onDelete(row)}
-                        className="p-1.5 border border-red-600  bg-red-100 rounded hover:bg-red-200 transition"
+                        className="p-1.5 border border-red-600 bg-red-100 rounded hover:bg-red-200 transition"
                         title="Delete"
                       >
                         <TrashIcon className="w-5 h-5 text-red-600" />
                       </button>
                     )}
-
                   </div>
                 </td>
               )}
