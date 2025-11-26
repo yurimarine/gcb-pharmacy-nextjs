@@ -8,7 +8,7 @@ import { fetchGenerics } from "@/app/store/genericSlice";
 import { fetchSuppliers } from "@/app/store/supplierSlice";
 import { fetchProductById, updateProduct } from "@/app/store/productSlice";
 import { useRouter, useParams } from "next/navigation";
-import { ListBulletIcon } from "@heroicons/react/24/outline";
+import { ClipboardDocumentListIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
 
@@ -156,7 +156,7 @@ export default function UpdateProductPage() {
           href="/admin/product/list"
           className="bg-green-500 shadow-md font-semibold text-white px-4 py-2 rounded flex items-center gap-2 hover:scale-105 hover:bg-green-600 transition"
         >
-          <ListBulletIcon className="text-white w-5 h-5" />
+          <ClipboardDocumentListIcon className="text-white w-5 h-5" />
           <span>Product List</span>
         </Link>
       </div>

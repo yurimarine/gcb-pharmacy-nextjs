@@ -7,7 +7,7 @@ import {
   fetchInventoryById,
   updateInventory,
 } from "../../../../../store/inventorySlice";
-import { ListBulletIcon } from "@heroicons/react/24/outline";
+import { ClipboardDocumentListIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
 
@@ -72,7 +72,7 @@ export default function UpdateInventoryPage() {
 
       setForm((prev) => ({
         ...prev,
-        selling_price: computed.toFixed(2), 
+        selling_price: computed.toFixed(2),
       }));
     }
   }, [form.unit_cost, form.markup_percentage]);
@@ -93,7 +93,7 @@ export default function UpdateInventoryPage() {
           href="/admin/inventory/list"
           className="bg-green-500 shadow-md font-semibold text-white px-4 py-2 rounded flex items-center gap-2 hover:scale-105 hover:bg-green-600 transition"
         >
-          <ListBulletIcon className="text-white w-5 h-5" />
+          <ClipboardDocumentListIcon className="text-white w-5 h-5" />
           <span>Inventory List</span>
         </Link>
       </div>
