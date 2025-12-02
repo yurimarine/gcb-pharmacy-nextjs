@@ -2,17 +2,21 @@
 
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { addGeneric } from "@/app/store/genericSlice";
+import { addPharmacy } from "@/app/store/pharmacySlice";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ClipboardDocumentListIcon } from "@heroicons/react/24/outline";
 
-export default function AddGenericPage() {
+export default function AddPharmacyPage() {
   const dispatch = useDispatch();
   const router = useRouter();
 
   const [form, setForm] = useState({
     name: "",
+    manager: "",
+    email: "",
+    phone: "",
+    address: "",
     description: "",
   });
 
@@ -25,30 +29,34 @@ export default function AddGenericPage() {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    dispatch(addGeneric(form))
+    dispatch(addPharmacy(form))
       .unwrap()
-      .then((res) => {
-        console.log("Generic added:", res);
-        router.push("/admin/generic/list");
+      .then(() => {
+        router.push("/admin/pharmacy/list");
       })
       .catch((err) => console.error(err));
+
     setForm({
       name: "",
+      manager: "",
+      email: "",
+      phone: "",
+      address: "",
       description: "",
     });
   };
 
   return (
-    <div className="w-full text-gray-700 ">
+    <div className="w-full text-gray-700">
       <div className="flex items-center justify-between mb-4">
-        <h1 className="text-xl font-bold">Add Generic</h1>
+        <h1 className="text-xl font-bold">Add Pharmacy</h1>
 
         <Link
-          href="/admin/generic/list"
+          href="/admin/pharmacy/list"
           className="bg-green-500 shadow-md font-semibold text-white px-4 py-2 rounded flex items-center gap-2 hover:scale-105 hover:bg-green-600 transition"
         >
           <ClipboardDocumentListIcon className="text-white w-5 h-5" />
-          <span>Generic List</span>
+          <span>Pharmacy List</span>
         </Link>
       </div>
 
@@ -59,19 +67,69 @@ export default function AddGenericPage() {
         <div className="flex w-full h-full">
           {/* LEFT COLUMN */}
           <div className="flex flex-col items-end w-[40%] gap-4">
-            {/* Generic Name */}
+            {/* Pharmacy Name */}
             <div className="flex items-center gap-4">
               <label className="block mb-1 w-32 text-right">
-                Generic Name :
+                Pharmacy Name :
               </label>
               <input
                 type="text"
                 name="name"
                 value={form.name}
                 onChange={onChange}
-                className="w-100 border focus:border-green-600 focus:ring-0 outline-none border-gray-300 rounded px-3 py-2"
+                className="w-100 border border-gray-300 focus:border-green-600 focus:ring-0 outline-none rounded px-3 py-2"
               />
             </div>
+
+            {/* Manager */}
+            <div className="flex items-center gap-4">
+              <label className="block mb-1 w-32 text-right">Manager :</label>
+              <input
+                type="text"
+                name="manager"
+                value={form.manager}
+                onChange={onChange}
+                className="w-100 border border-gray-300 focus:border-green-600 focus:ring-0 outline-none rounded px-3 py-2"
+              />
+            </div>
+
+            {/* Email */}
+            <div className="flex items-center gap-4">
+              <label className="block mb-1 w-32 text-right">Email :</label>
+              <input
+                type="email"
+                name="email"
+                value={form.email}
+                onChange={onChange}
+                className="w-100 border border-gray-300 focus:border-green-600 focus:ring-0 outline-none rounded px-3 py-2"
+              />
+            </div>
+
+            {/* Phone */}
+            <div className="flex items-center gap-4">
+              <label className="block mb-1 w-32 text-right">Phone :</label>
+              <input
+                type="text"
+                name="phone"
+                value={form.phone}
+                onChange={onChange}
+                className="w-100 border border-gray-300 focus:border-green-600 focus:ring-0 outline-none rounded px-3 py-2"
+              />
+            </div>
+
+            {/* Address */}
+            <div className="flex items-start gap-4">
+              <label className="block mb-1 w-32 text-right mt-1">
+                Address :
+              </label>
+              <textarea
+                name="address"
+                value={form.address}
+                onChange={onChange}
+                className="w-100 border border-gray-300 focus:border-green-600 focus:ring-0 outline-none rounded px-3 py-2 h-20"
+              ></textarea>
+            </div>
+
             {/* Description */}
             <div className="flex items-start gap-4">
               <label className="block mb-1 w-32 text-right mt-1">
@@ -86,10 +144,11 @@ export default function AddGenericPage() {
             </div>
           </div>
         </div>
-        {/* Submit Button */}
+
+        {/* Buttons */}
         <div className="flex justify-end gap-5">
           <Link
-            href="/admin/generic/list"
+            href="/admin/pharmacy/list"
             className="w-auto px-6 py-2 text-md bg-red-600 shadow-md font-semibold text-white rounded hover:bg-red-700 hover:scale-105 transition mt-4"
           >
             Cancel

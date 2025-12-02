@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addSupplier } from "@/app/store/supplierSlice";
 import { useRouter } from "next/navigation";
-import { ListBulletIcon } from "@heroicons/react/24/outline";
+import { ClipboardDocumentListIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 
 export default function AddSupplierPage() {
@@ -53,7 +53,7 @@ export default function AddSupplierPage() {
           href="/admin/supplier/list"
           className="bg-green-500 shadow-md font-semibold text-white px-4 py-2 rounded flex items-center gap-2 hover:scale-105 hover:bg-green-600 transition"
         >
-          <ListBulletIcon className="text-white w-5 h-5" />
+          <ClipboardDocumentListIcon className="text-white w-5 h-5" />
           <span>Supplier List</span>
         </Link>
       </div>

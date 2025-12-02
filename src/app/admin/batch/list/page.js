@@ -2,43 +2,38 @@
 
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteCategory, fetchCategories } from "../../../store/categorySlice";
 import { useRouter } from "next/navigation";
 import { FaPlus } from "react-icons/fa";
+import { fetchBatches } from "../../../store/batchSlice";
 import Table from "../../../components/Table";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
 import Link from "next/link";
 
-export default function CategoryList() {
+export default function BatchList() {
   const dispatch = useDispatch();
   const router = useRouter();
-
-  const { categories, loading, error } = useSelector((state) => state.category);
+  const { batches, loading, error } = useSelector((state) => state.batch);
 
   const columns = [
     { key: "id", label: "ID" },
-    { key: "name", label: "Category Name" },
-    { key: "description", label: "Description" },
+    { key: "batch_number", label: "Batch Number" },
+    { key: "pharmacy_name", label: "Pharmacy Name" },
+    { key: "date", label: "Date" },
   ];
 
-  const tableData = categories.map((c) => ({
-    id: c.id,
-    name: c.name,
-    description: c.description,
+  const tableData = batches.map((batch) => ({
+    id: batch.id,
+    batch_number: batch.batch_number,
+    pharmacy_name: batch.pharmacy?.name,
+    date: batch.batch_date,
   }));
 
-  const handleUpdate = (row) => {
-    router.push(`/admin/category/update/${row.id}`);
-  };
-
-  const handleDelete = (row) => {
-    if (!confirm(`Are you sure you want to delete ${row.name}?`)) return;
-
-    dispatch(deleteCategory(row.id));
+  const onRowClick = (row) => {
+    router.push(`/admin/batch/${row.id}`);
   };
 
   useEffect(() => {
-    dispatch(fetchCategories());
+    dispatch(fetchBatches());
   }, [dispatch]);
 
   if (loading)
@@ -52,18 +47,19 @@ export default function CategoryList() {
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
-        <h1 className="text-xl font-bold">Categories</h1>
+        <h1 className="text-xl font-bold">Batch List</h1>
 
         <Link
-          href="/admin/category/add"
+          href="/admin/batch/create-batch"
           className="bg-green-500 shadow-md font-semibold text-white px-4 py-2 rounded flex items-center gap-2 hover:scale-105 hover:bg-green-600 transition"
         >
           <FaPlus className="text-white w-4 h-4" />
-          <span>Add Category</span>
+          <span>Create Batch</span>
         </Link>
       </div>
-
-      <Table columns={columns} data={tableData} onUpdate={handleUpdate} onDelete={handleDelete} />
+      <div className="overflow-auto">
+        <Table columns={columns} data={tableData} onRowClick={onRowClick} />
+      </div>
     </div>
   );
 }

@@ -8,6 +8,7 @@ import manufacturerReducer from "./manufacturerSlice";
 import categoryReducer from "./categorySlice";
 import genericReducer from "./genericSlice";
 import inventoryReducer from "./inventorySlice";
+import batchReducer from "./batchSlice";
 
 
 
@@ -22,5 +23,6 @@ export const store = configureStore({
     category: categoryReducer,
     generic: genericReducer,
     inventory: inventoryReducer,
+    batch: batchReducer,
   },
 });

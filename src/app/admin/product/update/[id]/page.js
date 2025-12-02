@@ -8,7 +8,7 @@ import { fetchGenerics } from "@/app/store/genericSlice";
 import { fetchSuppliers } from "@/app/store/supplierSlice";
 import { fetchProductById, updateProduct } from "@/app/store/productSlice";
 import { useRouter, useParams } from "next/navigation";
-import { ListBulletIcon } from "@heroicons/react/24/outline";
+import { ClipboardDocumentListIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
 
@@ -48,7 +48,7 @@ export default function UpdateProductPage() {
     supplier_id: "",
     manufacturer_id: "",
     category_id: "",
-    brand_name: "",
+    product_name: "",
     dosage_form: "",
     packaging_type: "",
     volume_amount: "",
@@ -79,7 +79,7 @@ export default function UpdateProductPage() {
       supplier_id: "",
       manufacturer_id: "",
       category_id: "",
-      brand_name: "",
+      product_name: "",
       dosage_form: "",
       packaging_type: "",
       volume_amount: "",
@@ -105,7 +105,7 @@ export default function UpdateProductPage() {
         supplier_id: product.supplier_id ?? "",
         manufacturer_id: product.manufacturer_id ?? "",
         category_id: product.category_id ?? "",
-        brand_name: product.brand_name ?? "",
+        product_name: product.product_name ?? "",
         dosage_form: product.dosage_form ?? "",
         packaging_type: product.packaging_type ?? "",
         volume_amount: product.volume_amount ?? "",
@@ -156,7 +156,7 @@ export default function UpdateProductPage() {
           href="/admin/product/list"
           className="bg-green-500 shadow-md font-semibold text-white px-4 py-2 rounded flex items-center gap-2 hover:scale-105 hover:bg-green-600 transition"
         >
-          <ListBulletIcon className="text-white w-5 h-5" />
+          <ClipboardDocumentListIcon className="text-white w-5 h-5" />
           <span>Product List</span>
         </Link>
       </div>
@@ -258,13 +258,13 @@ export default function UpdateProductPage() {
               </select>
             </div>
 
-            {/* Brand Name */}
+            {/* Product Name */}
             <div className="flex items-center gap-4">
-              <label className="block mb-1 w-32 text-right">Brand Name :</label>
+              <label className="block mb-1 w-32 text-right">Product Name :</label>
               <input
                 type="text"
-                name="brand_name"
-                value={form.brand_name}
+                name="product_name"
+                value={form.product_name}
                 onChange={onChange}
                 className="w-100 border border-gray-300 rounded px-3 py-2 
              focus:border-green-600 focus:ring-0 outline-none"

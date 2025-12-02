@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchGenericById, updateGeneric } from "@/app/store/genericSlice";
 import { useRouter, useParams } from "next/navigation";
-import { ListBulletIcon } from "@heroicons/react/24/outline";
+import { ClipboardDocumentListIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
 
@@ -13,7 +13,6 @@ export default function UpdateGenericPage() {
   const router = useRouter();
   const { id } = useParams();
   const { generic, loading, error } = useSelector((state) => state.generic);
-
   const [form, setForm] = useState({
     name: "",
     description: "",
@@ -48,8 +47,8 @@ export default function UpdateGenericPage() {
   useEffect(() => {
     if (generic) {
       setForm({
-        name: generic.name,
-        description: generic.description,
+        name: generic.name || "",
+        description: generic.description || "",
       });
     }
   }, [generic]);
@@ -72,7 +71,7 @@ export default function UpdateGenericPage() {
           href="/admin/generic/list"
           className="bg-green-500 shadow-md font-semibold text-white px-4 py-2 rounded flex items-center gap-2 hover:scale-105 hover:bg-green-600 transition"
         >
-          <ListBulletIcon className="text-white w-5 h-5" />
+          <ClipboardDocumentListIcon className="text-white w-5 h-5" />
           <span>Generic List</span>
         </Link>
       </div>

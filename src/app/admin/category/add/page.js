@@ -6,7 +6,7 @@ import { addCategory } from "@/app/store/categorySlice";
 import { useRouter } from "next/navigation";
 
 import Link from "next/link";
-import { ListBulletIcon } from "@heroicons/react/24/outline";
+import { ClipboardDocumentListIcon } from "@heroicons/react/24/outline";
 
 export default function AddCategoryPage() {
   const dispatch = useDispatch();
@@ -30,7 +30,7 @@ export default function AddCategoryPage() {
       .unwrap()
       .then((res) => {
         console.log("Category added:", res);
-        router.push("/admin/category/list"); 
+        router.push("/admin/category/list");
       })
       .catch((err) => console.error(err));
     setForm({
@@ -48,7 +48,7 @@ export default function AddCategoryPage() {
           href="/admin/category/list"
           className="bg-green-500 shadow-md font-semibold text-white px-4 py-2 rounded flex items-center gap-2 hover:scale-105 hover:bg-green-600 transition"
         >
-          <ListBulletIcon className="text-white w-5 h-5" />
+          <ClipboardDocumentListIcon className="text-white w-5 h-5" />
           <span>Category List</span>
         </Link>
       </div>

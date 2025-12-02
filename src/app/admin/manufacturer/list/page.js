@@ -60,7 +60,7 @@ export default function ManufacturerList() {
 
         <Link
           href="/admin/manufacturer/add"
-          className="bg-green-500 shadow-md font-semibold text-white px-4 py-2 rounded flex items-center gap-2 hover:bg-green-600 transition"
+          className="bg-green-500 shadow-md font-semibold text-white px-4 py-2 rounded flex items-center gap-2 hover:scale-105 hover:bg-green-600 transition"
         >
           <FaPlus className="text-white w-4 h-4" />
           <span>Add Manufacturer</span>

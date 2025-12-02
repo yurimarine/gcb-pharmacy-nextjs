@@ -50,10 +50,43 @@ export const updateInventory = createAsyncThunk(
   }
 );
 
+export const fetchAllLowStock = createAsyncThunk(
+  "inventory/fetchAllLowStock",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await api.get(`admin/inventory/low-stock/all`);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to fetch low-stock inventory"
+      );
+    }
+  }
+);
+
+export const fetchAllExpired = createAsyncThunk(
+  "inventory/fetchAllExpired",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await api.get(`admin/inventory/expired/all`);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to fetch expired inventory"
+      );
+    }
+  }
+);
+
+
+
 const inventorySlice = createSlice({
   name: "inventory",
   initialState: {
     items: [],
+    item: [],
+    lowStockItems: [],
+    expiredItems: [],
     loading: false,
     error: null,
   },
@@ -98,6 +131,32 @@ const inventorySlice = createSlice({
       .addCase(updateInventory.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      });
+    builder
+      .addCase(fetchAllLowStock.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchAllLowStock.fulfilled, (state, action) => {
+        state.loading = false;
+        state.lowStockItems = action.payload.data ?? action.payload;
+      })
+      .addCase(fetchAllLowStock.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Something went wrong";
+      });
+    builder
+      .addCase(fetchAllExpired.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchAllExpired.fulfilled, (state, action) => {
+        state.loading = false;
+        state.expiredItems = action.payload.data ?? action.payload;
+      })
+      .addCase(fetchAllExpired.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Something went wrong";
       });
   },
 });

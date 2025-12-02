@@ -8,7 +8,7 @@ import {
 } from "@/app/store/manufacturerSlice";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
-import { ListBulletIcon } from "@heroicons/react/24/outline";
+import { ClipboardDocumentListIcon } from "@heroicons/react/24/outline";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
 
 export default function UpdateManufacturerPage() {
@@ -77,7 +77,7 @@ export default function UpdateManufacturerPage() {
           href="/admin/manufacturer/list"
           className="bg-green-500 shadow-md font-semibold text-white px-4 py-2 rounded flex items-center gap-2 hover:scale-105 hover:bg-green-600 transition"
         >
-          <ListBulletIcon className="text-white w-5 h-5" />
+          <ClipboardDocumentListIcon className="text-white w-5 h-5" />
           <span>Manufacturer List</span>
         </Link>
       </div>

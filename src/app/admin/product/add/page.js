@@ -8,7 +8,7 @@ import { fetchGenerics } from "@/app/store/genericSlice";
 import { fetchSuppliers } from "@/app/store/supplierSlice";
 import { addProduct } from "@/app/store/productSlice";
 import { useRouter } from "next/navigation";
-import { ListBulletIcon } from "@heroicons/react/24/outline";
+import { ClipboardDocumentListIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import LoadingSpinner from "@/app/components/LoadingSpinner";
 
@@ -16,25 +16,33 @@ export default function AddProductPage() {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const { manufacturers, loading: loadingManufacturers, error: errorManufacturers } = useSelector(
-    (state) => state.manufacturer
-  );
-  const { categories, loading: loadingCategories, error: errorCategories } = useSelector(
-    (state) => state.category
-  );
-  const { generics, loading: loadingGenerics, error: errorGenerics } = useSelector(
-    (state) => state.generic
-  );
-  const { suppliers, loading: loadingSuppliers, error: errorSuppliers } = useSelector(
-    (state) => state.supplier
-  );
+  const {
+    manufacturers,
+    loading: loadingManufacturers,
+    error: errorManufacturers,
+  } = useSelector((state) => state.manufacturer);
+  const {
+    categories,
+    loading: loadingCategories,
+    error: errorCategories,
+  } = useSelector((state) => state.category);
+  const {
+    generics,
+    loading: loadingGenerics,
+    error: errorGenerics,
+  } = useSelector((state) => state.generic);
+  const {
+    suppliers,
+    loading: loadingSuppliers,
+    error: errorSuppliers,
+  } = useSelector((state) => state.supplier);
 
   const [form, setForm] = useState({
     generic_id: "",
     supplier_id: "",
     manufacturer_id: "",
     category_id: "",
-    brand_name: "",
+    product_name: "",
     dosage_form: "",
     packaging_type: "",
     volume_amount: "",
@@ -57,7 +65,7 @@ export default function AddProductPage() {
       .unwrap()
       .then((res) => {
         console.log("Product added:", res);
-        router.push("/admin/product/list"); 
+        router.push("/admin/product/list");
       })
       .catch((err) => console.error(err));
     setForm({
@@ -65,7 +73,7 @@ export default function AddProductPage() {
       supplier_id: "",
       manufacturer_id: "",
       category_id: "",
-      brand_name: "",
+      product_name: "",
       dosage_form: "",
       packaging_type: "",
       volume_amount: "",
@@ -83,14 +91,26 @@ export default function AddProductPage() {
     dispatch(fetchSuppliers());
   }, [dispatch]);
 
-  if (loadingManufacturers || loadingCategories || loadingGenerics || loadingSuppliers)
-      return (
-        <div className="relative min-h-screen w-full">
-          <LoadingSpinner />
-        </div>
-      );
-    if (errorManufacturers || errorCategories || errorGenerics || errorSuppliers)
-      return <p className="text-red-600">{errorManufacturers || errorCategories || errorGenerics || errorSuppliers}</p>;
+  if (
+    loadingManufacturers ||
+    loadingCategories ||
+    loadingGenerics ||
+    loadingSuppliers
+  )
+    return (
+      <div className="relative min-h-screen w-full">
+        <LoadingSpinner />
+      </div>
+    );
+  if (errorManufacturers || errorCategories || errorGenerics || errorSuppliers)
+    return (
+      <p className="text-red-600">
+        {errorManufacturers ||
+          errorCategories ||
+          errorGenerics ||
+          errorSuppliers}
+      </p>
+    );
 
   return (
     <div className="w-full text-gray-700 ">
@@ -101,7 +121,7 @@ export default function AddProductPage() {
           href="/admin/product/list"
           className="bg-green-500 shadow-md font-semibold text-white px-4 py-2 rounded flex items-center gap-2 hover:scale-105 hover:bg-green-600 transition"
         >
-          <ListBulletIcon className="text-white w-5 h-5" />
+          <ClipboardDocumentListIcon className="text-white w-5 h-5" />
           <span>Product List</span>
         </Link>
       </div>
@@ -203,13 +223,13 @@ export default function AddProductPage() {
               </select>
             </div>
 
-            {/* Brand Name */}
+            {/* Product Name */}
             <div className="flex items-center gap-4">
-              <label className="block mb-1 w-32 text-right">Brand Name :</label>
+              <label className="block mb-1 w-32 text-right">Product Name :</label>
               <input
                 type="text"
-                name="brand_name"
-                value={form.brand_name}
+                name="product_name"
+                value={form.product_name}
                 onChange={onChange}
                 className="w-100 border border-gray-300 rounded px-3 py-2 
              focus:border-green-600 focus:ring-0 outline-none"
@@ -289,7 +309,6 @@ export default function AddProductPage() {
                 step="0.01"
                 name="unit_cost"
                 value={form.unit_cost}
-                required
                 onChange={onChange}
                 className="w-100 border border-gray-300 focus:border-green-600 focus:ring-0 outline-none rounded px-3 py-2"
               />
