@@ -11,6 +11,7 @@ import LoadingSpinner from "@/app/components/LoadingSpinner";
 export default function InventoryList() {
   const dispatch = useDispatch();
   const router = useRouter();
+  const [selectedPharmacy, setSelectedPharmacy] = useState("");
 
   const {
     pharmacies,
@@ -22,14 +23,14 @@ export default function InventoryList() {
     loading,
     error,
   } = useSelector((state) => state.inventory);
-  const [selectedPharmacy, setSelectedPharmacy] = useState("");
+  
   const columns = [
     { key: "product_id", label: "ID" },
     { key: "generic_name", label: "Generic Name" },
     { key: "product_name", label: "Product" },
-    { key: "stock_quantity", label: "Stock Quantity" },
     { key: "markup_percentage", label: "Markup %" },
     { key: "selling_price", label: "Selling Price" },
+    { key: "stock_quantity", label: "Stock Quantity" },
     { key: "reorder_quantity", label: "Reorder Level" },
     { key: "expiry_date", label: "Expiry Date" },
   ];
@@ -40,7 +41,7 @@ export default function InventoryList() {
     pharmacy_id: item.pharmacy_id,
     product_id: item.product_id,
     generic_name: item.product?.generic?.name ?? "-",
-    product_name: item.product?.brand_name ?? "-",
+    product_name: item.product?.product_name ?? "-",
     stock_quantity: item.stock_quantity ?? "-",
     markup_percentage:
       item.markup_percentage != null ? `${item.markup_percentage} %` : "-",

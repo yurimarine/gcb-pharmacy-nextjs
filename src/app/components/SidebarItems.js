@@ -6,7 +6,8 @@ import {
   ArchiveBoxIcon,
   BuildingStorefrontIcon,
   UserGroupIcon,
-  UserIcon,
+  ClipboardIcon,
+  UserCircleIcon,
 } from "@heroicons/react/24/outline";
 
 export const SidebarItems = [
@@ -159,9 +160,20 @@ export const SidebarItems = [
     icon: <ArchiveBoxIcon className="w-5 h-5" />,
     children: [
       {
+        name: "Batch List",
+        path: "/admin/batch/list",
+        icon: <ClipboardDocumentListIcon className="w-4 h-4" />,
+      },
+      {
+        name: "Create Batch",
+        path: "/admin/batch/create-batch",
+
+        icon: <PlusCircleIcon className="w-4 h-4" />,
+      },
+      {
         name: "Create Order",
         path: "/admin/batch/create-order",
-        icon: <ClipboardDocumentListIcon className="w-4 h-4" />,
+        icon: <ClipboardIcon className="w-4 h-4" />,
       },
     ],
   },
@@ -180,7 +192,7 @@ export const SidebarItems = [
   {
     name: "User",
     path: "/admin/user",
-    icon: <UserIcon className="w-5 h-5" />,
+    icon: <UserCircleIcon className="w-5 h-5" />,
     children: [
       {
         name: "User List",

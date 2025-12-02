@@ -42,7 +42,7 @@ export default function AddProductPage() {
     supplier_id: "",
     manufacturer_id: "",
     category_id: "",
-    brand_name: "",
+    product_name: "",
     dosage_form: "",
     packaging_type: "",
     volume_amount: "",
@@ -73,7 +73,7 @@ export default function AddProductPage() {
       supplier_id: "",
       manufacturer_id: "",
       category_id: "",
-      brand_name: "",
+      product_name: "",
       dosage_form: "",
       packaging_type: "",
       volume_amount: "",
@@ -223,13 +223,13 @@ export default function AddProductPage() {
               </select>
             </div>
 
-            {/* Brand Name */}
+            {/* Product Name */}
             <div className="flex items-center gap-4">
-              <label className="block mb-1 w-32 text-right">Brand Name :</label>
+              <label className="block mb-1 w-32 text-right">Product Name :</label>
               <input
                 type="text"
-                name="brand_name"
-                value={form.brand_name}
+                name="product_name"
+                value={form.product_name}
                 onChange={onChange}
                 className="w-100 border border-gray-300 rounded px-3 py-2 
              focus:border-green-600 focus:ring-0 outline-none"
@@ -309,7 +309,6 @@ export default function AddProductPage() {
                 step="0.01"
                 name="unit_cost"
                 value={form.unit_cost}
-                required
                 onChange={onChange}
                 className="w-100 border border-gray-300 focus:border-green-600 focus:ring-0 outline-none rounded px-3 py-2"
               />

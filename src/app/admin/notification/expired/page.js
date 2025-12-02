@@ -24,7 +24,7 @@ export default function ExpiredPage() {
     id: item.id,
     pharmacy_name: item.pharmacy?.name,
     generic_name: item.product?.generic?.name,
-    name: item.product?.brand_name,
+    name: item.product?.product_name,
     expiry_date: (
       <span className="text-red-600 font-semibold">{item.expiry_date}</span>
     ),

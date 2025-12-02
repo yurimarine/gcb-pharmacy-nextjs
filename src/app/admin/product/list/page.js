@@ -16,7 +16,7 @@ export default function ProductList() {
 
   const columns = [
     { key: "id", label: "ID" },
-    { key: "brand_name", label: "Brand Name" },
+    { key: "product_name", label: "Product Name" },
     { key: "generic_name", label: "Generic" },
     { key: "category_name", label: "Category" },
     { key: "unit_cost", label: "Unit Cost" },
@@ -24,7 +24,7 @@ export default function ProductList() {
 
   const tableData = products.map((p) => ({
     id: p.id,
-    brand_name: p.brand_name,
+    product_name: p.product_name,
     generic_name: p.generic?.name || "-",
     category_name: p.category?.name || "-",
     unit_cost:
@@ -41,7 +41,7 @@ export default function ProductList() {
   };
 
   const handleDelete = (row) => {
-    if (!confirm(`Are you sure you want to delete ${row.brand_name}?`)) return;
+    if (!confirm(`Are you sure you want to delete ${row.product_name}?`)) return;
 
     dispatch(deleteProduct(row.id));
   };

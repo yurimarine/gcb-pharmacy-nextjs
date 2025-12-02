@@ -52,7 +52,7 @@ export default function UpdateInventoryPage() {
   useEffect(() => {
     if (item) {
       setForm({
-        product_name: item.product?.brand_name ?? "",
+        product_name: item.product?.product_name ?? "",
         stock_quantity: item.stock_quantity ?? "",
         reorder_quantity: item.reorder_quantity ?? "",
         unit_cost: item.product?.unit_cost ?? "",

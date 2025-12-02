@@ -25,7 +25,8 @@ export default function LowStockPage() {
     id: item.id,
     generic_name: item.product?.generic?.name,
     pharmacy_name: item.pharmacy?.name,
-    name: item.product?.brand_name,
+    name: item.product?.product_name,
+    status: item.status,
 
     stock_quantity: (
       <span className="text-red-600 font-semibold">{item.stock_quantity}</span>
